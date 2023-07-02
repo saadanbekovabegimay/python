@@ -29,6 +29,15 @@ class Vacancy(models.Model):
         ordering = ['salary']
 
 
+class Company(models.Model):
+    title = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    num_worker = models.IntegerField(null=True)
+    is_hunting = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
+
 class Category(models.Model):
     name = models.CharField(max_length=55)
     description = models.TextField(null=True, blank=True)

@@ -23,12 +23,23 @@ def address(request):
             <li>г. Ош, Черёмушка, дом 235</li>
         </ul>
     ''')
+def company_list(request):
+    companies = Company.objects.all()
+    context = {"companies": companies}
+    return render(request, 'companies.html', context)
 
 
 def vacancy_list(request):
-    vacancies = Vacancy.objects.all()  # в Django ORM "SELECT * FROM Vacancies"
-    context = {"vacancies": vacancies}  # context data для jinja2
+    vacancies = Vacancy.objects.all()
+    context = {"vacancies": vacancies}
     context["example"] = "hello"
     return render(request, 'vacancies.html', context)
 
-
+def vacancy_detail(request, id):
+    vacancy_object = Vacancy.objects.get(id=id)
+    candidates = vacancy_object.candidate.all()
+    context = {
+        'vacancy_object': vacancy_object,
+        'candidates': candidates,
+    }
+    return render(request, 'vacancy/vacancy_page.html', context)
