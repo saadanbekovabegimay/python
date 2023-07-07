@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect,  HttpResponse
 from .models import Worker, Resume
 
 
@@ -8,7 +8,6 @@ def workers(request):
 
 def worker_info(request, id):
     worker_object = Worker.objects.get(id=id)
-    # SELECT * FROM Worket WHERE id={id}
     vacancies = worker_object.vacancy_set.all()
     context = {
         "worker": worker_object,
@@ -35,8 +34,32 @@ def resume_info(request, id):
 
 def my_resume(request):
     resume_query = Resume.objects.filter(worker=request.user.worker)
-    # resume_query = request.user.worker.resume.all()
     return render(
         request, 'resume/resume_list.html',
         {"resumes": resume_query}
     )
+def add_resume(request):
+    template = 'resume/resume_add.html'
+    if request.method == "GET":
+        return render(request, template)
+    elif request.method == "POST":
+        new_resume = Resume()
+        new_resume.worker = request.user.worker
+        new_resume.title = request.POST["form-title"]
+        new_resume.text = request.POST["form-text"]
+        new_resume.save()
+        return HttpResponse("Запись добавлена!")
+
+
+
+def resume_edit(request, id):
+    resume = Resume.objects.get(id=id)
+
+    if request.method == "POST":
+        resume.title = request.POST.get("form-title")
+        resume.text = request.POST.get("form-text")
+        resume.save()
+
+        return redirect(f'/resume-detail/{resume.id}/')
+
+    return render(request, 'resume/resume_edit_form.html', {"resume": resume})

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="form-title"value='{{ resume.title }}'>
+        <textarea name="form-text" cols="20" rows="5" value='{{ resume.text }}'></textarea>
+        <button>Изменить</button>
+    </form>
+
+{% endblock %}
+
