@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'my_style_css' %}">
     <title>
         {% block my_title %}
             Hand Hunter
@@ -24,6 +25,10 @@
         {% else %}
         <a href="{% url 'reg' %}">Регистрация</a> |
             Пожалуйста, авторизуйтесь
+        {% endif %}
+        {% if user.is_superuser  %}
+        <a href="{% url 'create_company' %}">Компании</a>
+        <a href="{% url 'new_company_list' %}">Список компаний</a>
         {% endif %}
     </nav>
       <div>
