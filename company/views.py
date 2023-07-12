@@ -1,37 +1,37 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from .models import Company
 from .forms import CompanyForm
 
-def create_company(request):
-    if request.method == 'POST':
-        form = CompanyForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('company_list')
-    else:
-        form = CompanyForm()
-    return render(request, 'create_company.html', {'form': form})
-
-def new_company_list(request):
+def company_list(request):
     companies = Company.objects.all()
     return render(request, 'company_list.html', {'companies': companies})
 
-def company_edit(request, company_id):
-    company = Company.objects.get(id=company_id)
-    if request.method == 'POST':
-        form = CompanyForm(request.POST)
+def create_company(request):
+    context = {}
+
+    if request.method == "POST":
+        company_form = CompanyForm(request.POST)
+        if company_form.is_valid():
+            company_form.save()
+            return HttpResponse("Готово!")
+
+    company_form = CompanyForm()
+    context["form"] = company_form
+    return render(request, 'create_company.html', context)
+
+def company_edit(request, id):
+    company_object = Company.objects.get(id=id)
+
+    if request.method == "POST":
+        form = CompanyForm(request.POST, instance=company_object)
         if form.is_valid():
-            company.name = form.data['name']
-            company.date = form.data['date']
-            company.workers.set(form.data.getlist('workers'))
-            company.save()
+            form.save()
+            return HttpResponse("Готово!")
 
-            return redirect('new_company_list')
-    else:
-        form = CompanyForm(
-            initial={'name': company.name, 'date': company.date, 'workers': company.workers.all()})
-    return render(request, 'edit_company.html', {'form': form, 'company': company})
+    form = CompanyForm(instance=company_object)
+    return render(request, "edit_company.html", {"form": form})
 
 
 
-# Create your views here.
+
+

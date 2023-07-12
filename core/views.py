@@ -25,10 +25,6 @@ def address(request):
             <li>г. Ош, Черёмушка, дом 235</li>
         </ul>
     ''')
-def company_list(request):
-    companies = Company.objects.all()
-    context = {"companies": companies}
-    return render(request, 'companies.html', context)
 
 
 def vacancy_list(request):

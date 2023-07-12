@@ -2,12 +2,12 @@
 
 {% block content %}
 
-<ul>
-  {% for company in companies %}
+  <ul>
+    {% for company in companies %}
     <li>{{ company.name }}</li>
-  {% empty %}
+    {% empty %}
     <li>No companies found.</li>
-  {% endfor %}
-</ul>
+    {% endfor %}
+  </ul>
 
 {% endblock %}
