@@ -1,7 +1,9 @@
 from django.shortcuts import render, HttpResponse, redirect
 from .models import Vacancy
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 from .forms import VacancyForm
+from .filters import VacancyFilter
 
 # Create your views here.
 def homepage(request):
@@ -27,10 +29,18 @@ def address(request):
     ''')
 
 
+# def skill(request):
+#     # vacancies = Vacancy.objects.all()
+#     skill_filter = SkillFilter(request.GET, queryset=Skill.objects.all())
+#     # context = {"vacancies": vacancies}
+#     context = {"vacancy_filter": skill_filter}
+#     return render(request, 'skill.html', context)
+
 def vacancy_list(request):
-    vacancies = Vacancy.objects.all()
-    context = {"vacancies": vacancies}
-    context["example"] = "hello"
+    # vacancies = Vacancy.objects.all()
+    vacancy_filter = VacancyFilter(request.GET, queryset=Vacancy.objects.all())
+    # context = {"vacancies": vacancies}
+    context = {"vacancy_filter": vacancy_filter}
     return render(request, 'vacancies.html', context)
 
 def vacancy_detail(request, id):
@@ -43,17 +53,33 @@ def vacancy_detail(request, id):
     return render(request, 'vacancy/vacancy_page.html', context)
 def search(request):
     word = request.GET["keyword"]
-    vacancy_list = Vacancy.objects.filter(title__contains=word)
+    vacancy_list = Vacancy.objects.filter(title__icontains=word)
     context = {"vacancies": vacancy_list}
     return render(request, 'vacancies.html', context)
 
+def sign_in(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('home')
+        else:
+            return HttpResponse("Неверный логин или пароль")
+
+    return render(request, 'auth/sign_in.html')
+
+def sign_out(request):
+    logout(request)
+    return redirect(sign_in)
 def reg_view(request):
     if request.method == "POST":
         user = User(
             username=request.POST['username']
         )
         user.save()
-        user.set_password(request.POST['password]'])
+        user.set_password(request.POST['password'])
         user.save()
         return HttpResponse('Готово')
 
@@ -102,3 +128,5 @@ def vacancy_edit(request, id):
         request, 'vacancy/resume_edit_form.html',
         {"vacancy": vacancy}
     )
+
+

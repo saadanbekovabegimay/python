@@ -2,12 +2,10 @@
 
 {% block content %}
 
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="text" name="form-title"value='{{ resume.title }}'>
-        <textarea name="form-text" cols="20" rows="5" value='{{ resume. text }}'></textarea>
-        <button>Изменить</button>
+        {{ form.as_p }}
+        <button>Сохранить изменения</button>
     </form>
 
 {% endblock %}
-

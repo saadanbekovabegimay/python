@@ -43,6 +43,17 @@ class Resume(models.Model):
     title = models.CharField(max_length=55)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    profile_photo = models.ImageField(
+        null=True, blank=True,
+        upload_to="profile_photo/",
+        verbose_name="Фото сотрудника"
+    )
 
     def __str__(self):
         return self.title
+
+class Skill(models.Model):
+    skill_name = models.CharField(max_length=55)
+
+    def __str__(self):
+        return self.skill_name

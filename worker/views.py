@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect,  HttpResponse
 from .models import Worker, Resume
+from django.contrib.auth.decorators import login_required
+from .forms import ResumeEditForm
 
 
 def workers(request):
@@ -33,11 +35,16 @@ def resume_info(request, id):
 
 
 def my_resume(request):
-    resume_query = Resume.objects.filter(worker=request.user.worker)
-    return render(
-        request, 'resume/resume_list.html',
-        {"resumes": resume_query}
+    if request.user.is_authenticated:
+        resume_query = Resume.objects.filter(worker=request.user.worker)
+        return render(
+            request, 'resume/resume_list.html',
+            {"resumes": resume_query}
     )
+    else:
+        return redirect('home')
+
+@login_required(login_url='sign-in')
 def add_resume(request):
     template = 'resume/resume_add.html'
     if request.method == "GET":
@@ -53,13 +60,20 @@ def add_resume(request):
 
 
 def resume_edit(request, id):
-    resume = Resume.objects.get(id=id)
+    resume_object = Resume.objects.get(id=id)
 
-    if request.method == "POST":
-        resume.title = request.POST.get("form-title")
-        resume.text = request.POST.get("form-text")
-        resume.save()
+    if request.method == "GET":
+        form = ResumeEditForm(instance=resume_object)
+        return render(request, "resume/resume_edit_form.html", {"form": form})
 
-        return redirect(f'/resume-detail/{resume.id}/')
-
-    return render(request, 'resume/resume_edit_form.html', {"resume": resume})
+    elif request.method == "POST":
+        form = ResumeEditForm(
+            data=request.POST,
+            instance=resume_object,
+            files=request.FILES
+        )
+        if form.is_valid():
+            obj = form.save()
+            return redirect(resume_info, id=obj.id)
+        else:
+            return HttpResponse("Форма не валидна")
