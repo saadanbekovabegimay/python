@@ -1,13 +1,22 @@
 from django.shortcuts import render, HttpResponse, redirect
 from .models import Vacancy
+from company.models import Company
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from .forms import VacancyForm
-from .filters import VacancyFilter
+
+
+
+
 
 # Create your views here.
 def homepage(request):
-    return render(request=request, template_name="index.html")
+    if request.method == "POST":
+        return HttpResponse("Метод не разрешён, только GET")
+    context = {}
+    context['vacancies'] = Vacancy.objects.all()[:5]
+    context['companies'] = Company.objects.all()[:3]
+    return render(request=request, template_name="index.html", context=context)
 
 def about(request):
     return HttpResponse('Найдите работу или работника мечты!')
@@ -28,20 +37,6 @@ def address(request):
         </ul>
     ''')
 
-
-# def skill(request):
-#     # vacancies = Vacancy.objects.all()
-#     skill_filter = SkillFilter(request.GET, queryset=Skill.objects.all())
-#     # context = {"vacancies": vacancies}
-#     context = {"vacancy_filter": skill_filter}
-#     return render(request, 'skill.html', context)
-
-def vacancy_list(request):
-    # vacancies = Vacancy.objects.all()
-    vacancy_filter = VacancyFilter(request.GET, queryset=Vacancy.objects.all())
-    # context = {"vacancies": vacancies}
-    context = {"vacancy_filter": vacancy_filter}
-    return render(request, 'vacancies.html', context)
 
 def vacancy_detail(request, id):
     vacancy_object = Vacancy.objects.get(id=id)
@@ -88,6 +83,9 @@ def reg_view(request):
         'auth/registr.html'
     )
 
+def vacancy_list(request):
+    vacancies = Vacancy.objects.all()
+    return render(request, 'index.html', {'vacancies': vacancies})
 def add_vacancy(request):
     if request.method == "POST":
         new_vacancy = Vacancy(

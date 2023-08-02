@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+   <h1>Список новостей</h1>
+    {% for a in articles %}
+       <li>
+            <h2>{{ a.title }}</h2>
+            <p>Автор: {{ a.author }}</p>
+            <p>{{ a.text }}</p>
+            <p>Дата создания: {{ a.created_at }}</p>
+            <p>Просмотры: {{ a.views_count }}</p>
+            <p>Лайки: {{ a.likes_users }}</p>
+        </li>
+    {% endfor %}
+
+{% endblock %}

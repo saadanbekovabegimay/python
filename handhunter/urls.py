@@ -29,7 +29,7 @@ urlpatterns = [
     path('about/', about),
     path('contacts/', contact_view),
     path('address/', address),
-    path('vacancies/', vacancy_list),
+    path('vacancies/', vacancy_list, name='vacancies'),
     path('vacancy/<int:id>/', vacancy_detail, name='vacancy-info'),
     path('add-vacancy/', add_vacancy, name='add-vacancy'),
     path('add-vacancy-df/', vacancy_add_via_django_form),
@@ -49,7 +49,9 @@ urlpatterns = [
     path('sign-in/', sign_in, name='sign-in'),
     path('login-generic/', LoginView.as_view(), name='login-generic'),
     path('sign-out/', sign_out, name='sign-out'),
-    path('recruit/', include('recruit.urls'))
+    path('recruit/', include('recruit.urls')),
+    path('recruiter-list/', include('recruit.urls')),
+    path('news/', include('news.urls'), name='news'),
  ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

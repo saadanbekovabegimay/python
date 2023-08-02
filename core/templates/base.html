@@ -52,6 +52,15 @@
             <li class="nav-item">
               <a class="nav-link" href="/resume-list">Резюме</a>
             </li>
+                 <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Рекрутеры</a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/recruiter-list">Список Рекрутеров</a></li>
+                  {% for recruiter in recruiters %}
+                            <a href="{% url 'recruiter-update' recruiter.pk %}">{{ recruiter.name }}</a>
+                        {% endfor %}
+              </ul>
+            </li>
           {% if request.user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'my-resume' %}">Мои Резюме</a>

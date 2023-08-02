@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+    <h1>Новости{{ article.title }}</h1>
+    <p>Автор: {{ article.author }}</p>
+    <p>Текст{{ article.text }}</p>
+    <p>Дата создания: {{ article.created_at }}</p>
+    <p>Просмотры: {{ article.views_count }}</p>
+    <p>Лайки: {{ article.likes_users }}</p>
+
+{% endblock %}

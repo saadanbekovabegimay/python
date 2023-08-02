@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'worker',
     'company',
     'recruit',
+    'news',
 ]
 
 MIDDLEWARE = [
@@ -85,7 +86,7 @@ DATABASES = {
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
-
+    # }
     'default': {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "hh_db",
@@ -141,3 +142,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = '/sign-in/'
